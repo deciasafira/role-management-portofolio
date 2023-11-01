@@ -1,0 +1,50 @@
+.btn{
+    box-shadow: 3px 2px #dfdfdf;
+    border: solid 1px #dfdfdf;
+    padding: 5px;
+    border-radius: 5px;
+}
+.btn-none{
+    background-color: transparent;
+    box-shadow: none;
+}
+.btn-default{
+    background-color: #ffffff;
+    color: #339AA5;
+}
+.btn-default:hover{
+    color: #2A8089;
+}
+.btn-main{
+    background-color: #339AA5;
+    color: white;
+}
+.btn-main:hover{
+    background-color: #2A8089;
+}
+.btn-second{
+    background-color: #D6EBED;
+    color: #339AA5;
+}
+.btn-second:hover{
+    color: #2A8089;
+}
+.btn-outline{
+    background-color: #ffffff;
+    color: #339AA5;
+    border: solid 1px #339AA5;
+}
+.btn-outline:hover{
+    color: #2A8089;
+}
+.btn-modal{
+    background-color: #339AA5;
+    color: white;
+    height: 3.1em;
+    font-size: small;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.btn-modal:hover{
+    background-color: #2A8089;
+}

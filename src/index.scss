@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-montserrat;
+  @apply text-white;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  /* Add a z-index to ensure it's above the scrolling content */
+  background-color: #4893E6;
+  /* Adjust the background color as needed */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: blue;
+  /* Set the desired color for the thumb */
+}
+
+.form-row-field-input:focus~label {
+  transition: 0.5s;
+  transform: translate(0px, -21px);
+  font-size: 14px;
+  background-color: rgba(49, 50, 66, 1)
+}
+
+input[type=yahoo]:focus {
+  outline: 2px solid #2E6ADF;
+  border: none;
+}
