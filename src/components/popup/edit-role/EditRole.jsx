@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { cn } from "../../../utils/cn";
 import { asyncUpdateRoles } from "../../../states/roles/Action";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -9,15 +10,9 @@ import { FaTimes } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 
-import EditItem from "./EditItem";
+import InputField from "../../add-role/Input/InputField";
 import TagsContainer from "../../tags-container/TagsContainer";
 import Button from "../../Button/Button";
-
-// Checkbox
-import CheckBoxAllWorksets from "../../checkbox/worksets/CheckboxAllWorkset";
-import CheckBoxWorksets from "../../checkbox/worksets/CheckboxWorkset";
-import CheckBoxAllServices from "../../checkbox/services/CheckboxAllService";
-import CheckBoxServices from "../../checkbox/services/CheckboxService";
 
 import EditConfirmation from "./EditConfirmation";
 
@@ -31,8 +26,46 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "../../../index.scss";
 
+const inputState = {
+  EMPTY: "EMPTY",
+  INIT: "INIT",
+  VALID: "VALID",
+  INVALID_SYMBOL: "INVALID_SYMBOL",
+  INVALID_DOUBLE: "INVALID_DOUBLE",
+  INVALID_STEP: "INVALID_STEP",
+  INVALID_QUANTITY: "INVALID_QUANTITY",
+};
+
 const EditRole = ({ handleClose, details, worksetsList, servicesList }) => {
+  const wordQuantityPattern = /^(?=\w{1,20}$)/;
+  const fullNameSymbolPattern = /^[a-zA-Z0-9]+$/;
+
   const modalRef = useRef(null);
+  const [editedRole, setRole] = useState(details.name);
+  const [selectedTagsWorkset, setSelectedTagsWorkset] = useState(
+    details.worksets.map((workset) => workset.workset)
+  );
+  const [selectedTagsService, setSelectedTagsService] = useState(
+    details.services.map((services) => services.service)
+  );
+  const roles = useSelector((state) => state.roles[1].roles);
+  const [nameState, setNameState] = useState(inputState.INIT);
+  const [cooldown, setCooldown] = useState(false);
+  const [isRoleFocused, setIsRoleFocused] = useState(false);
+
+  // Checked Worksets
+  const [isAllWorksetsChecked, setIsAllWorksetsChecked] = useState(false);
+  const [isAllWorksetsCheckBoxClicked, setIsAllWorksetsCheckBoxClicked] =
+    useState(false);
+
+  // Checked Services
+  const [isAllServicesChecked, setIsAllServicesChecked] = useState(false); // State for "Select All" checkbox
+  const [isAllServicesCheckBoxClicked, setIsAllServicesCheckBoxClicked] =
+    useState(false);
+
+  // Show Edit Comnfirmation
+  const [showEditConfirmation, setShowEditConfirmation] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -48,27 +81,64 @@ const EditRole = ({ handleClose, details, worksetsList, servicesList }) => {
     };
   }, [handleClose]);
 
-  const [editedRole, setRole] = useState(details.name);
-  const [selectedTagsWorkset, setSelectedTagsWorkset] = useState(
-    details.worksets.map((workset) => workset.workset)
-  );
-  const [selectedTagsService, setSelectedTagsService] = useState(
-    details.services.map((services) => services.service)
-  );
+  const setNameHandler = (value) => {
+    const pattern = /^[A-Za-z0-9]*$/;
+    const hasNumbersOrSymbols = !pattern.test(value);
 
-  // Checked Worksets
-  const [isAllWorksetsChecked, setIsAllWorksetsChecked] = useState(false);
-  const [isAllWorksetsCheckBoxClicked, setIsAllWorksetsCheckBoxClicked] =
-    useState(false);
+    if (hasNumbersOrSymbols) {
+      if (!cooldown) {
+        // Show a toast notification for numbers or symbols
+        // toast.error("Role name cannot contain symbols or whitespace", {
+        //   theme: "colored",
+        //   autoClose: 2500,
+        // });
+        // Set a cooldown for 3 seconds
+        setCooldown(true);
+        setTimeout(() => {
+          setCooldown(false);
+        }, 3000);
+      }
+    } else if (value.length > 20) {
+      // Truncate the value if it exceeds 20 characters
+      const truncatedSearchTerm = value.substring(0, 20);
+      setRole(truncatedSearchTerm);
 
-  // Checked Services
-  const [isAllServicesChecked, setIsAllServicesChecked] = useState(false); // State for "Select All" checkbox
-  const [isAllServicesCheckBoxClicked, setIsAllServicesCheckBoxClicked] =
-    useState(false);
+      if (!cooldown) {
+        // Show a toast notification if the role name exceeds 20 characters
+        // toast.error("Role name cannot exceed 20 characters", {
+        //   theme: "colored",
+        //   autoClose: 2500,
+        // });
+        // Set a cooldown for 2 seconds
+        setCooldown(true);
+        setTimeout(() => {
+          setCooldown(false);
+        }, 2000);
+      }
+    } else {
+      setRole(value);
+    }
+  };
 
-  // Show Edit Comnfirmation
-  const [showEditConfirmation, setShowEditConfirmation] = useState(false);
-  const dispatch = useDispatch();
+  useEffect(() => {
+    if (
+      roles.find(
+        (role) => role.name === editedRole && editedRole !== details.name
+      )
+    ) {
+      setNameState(inputState.INVALID_DOUBLE);
+    } else if (editedRole.length === 0) {
+      setNameState(inputState.EMPTY);
+    } else if (!fullNameSymbolPattern.test(editedRole)) {
+      setNameState(inputState.INVALID_SYMBOL);
+    } else if (!wordQuantityPattern.test(editedRole)) {
+      setNameState(inputState.INVALID_QUANTITY);
+    } else if (editedRole === details.name) {
+      setNameState(inputState.INIT);
+    } else {
+      setNameState(inputState.VALID);
+    }
+  }, [editedRole, roles]);
 
   function getDeletedTags(selectedTags, initial) {
     let deletedTags = [];
@@ -169,7 +239,8 @@ const EditRole = ({ handleClose, details, worksetsList, servicesList }) => {
   const isButtonDisabled =
     editedRole.trim() === "" ||
     selectedTagsWorkset.length === 0 ||
-    selectedTagsService.length === 0;
+    selectedTagsService.length === 0 ||
+    nameState === inputState.INVALID_DOUBLE;
 
   return (
     <>
@@ -179,18 +250,125 @@ const EditRole = ({ handleClose, details, worksetsList, servicesList }) => {
           <div className="px-20 py-12 rounded-2xl shadow-2xl relative flex flex-col bg-high-container outline-none focus:outline-none">
             {/*header*/}
             <div className="py-2.5 flex items-start justify-between">
-              <h1 className="text-3xl font-bold text-white">Edit Role</h1>
+              <h1 className="text-3xl pb-4 font-bold text-white">Edit Role</h1>
             </div>
             {/*body*/}
             <div className="relative">
               <div>
                 {/* Edit Role Name */}
-                <EditItem
-                  label="Role"
-                  value={editedRole}
-                  onChange={setRole}
-                  minLength={2}
-                />
+                <div className="mb-3">
+                  <InputField
+                    className={cn(
+                      "py-3 w-full rounded-md outline-none ring-0 ring-offset-0 border transition-transform duration-200",
+                      "bg-high-container text-variant-on-surface",
+                      nameState === inputState.VALID &&
+                        `border-green-400 ${
+                          isRoleFocused ? "" : "border-green-400"
+                        }`,
+                      nameState === inputState.INVALID_QUANTITY &&
+                        "border-error",
+                      nameState === inputState.INVALID_DOUBLE && "border-error",
+                      nameState === inputState.INVALID_DOUBLE && "border-error",
+                      nameState === inputState.INVALID_SYMBOL && "border-error",
+                      nameState === inputState.INIT &&
+                        "border-variant-on-surface",
+                      nameState === inputState.EMPTY &&
+                        `border-error form-row-field-input ${
+                          isRoleFocused ? "border-light-primary" : ""
+                        }`
+                    )}
+                    value={editedRole}
+                    changeHandler={(e) => setNameHandler(e.target.value)}
+                    onBlur={() => setIsRoleFocused(!isRoleFocused)}
+                    onFocus={() => setIsRoleFocused(!isRoleFocused)}
+                  />
+                  <label
+                    className={cn(
+                      "ml-4 text-sm transition-all duration-300",
+                      nameState === inputState.VALID &&
+                        `text-green-400 ${
+                          isRoleFocused ? "" : "text-green-400"
+                        }`,
+                      nameState === inputState.INVALID_QUANTITY && "text-error",
+                      nameState === inputState.INVALID_DOUBLE && "text-error",
+                      nameState === inputState.INVALID_SYMBOL && "text-error",
+                      nameState === inputState.INVALID_DOUBLE && "text-error",
+                      nameState === inputState.INIT &&
+                        "border-variant-on-surface form-row-field-input",
+                      nameState === inputState.INVALID_STEP && "text-error",
+                      nameState === inputState.EMPTY &&
+                        `text-error ${
+                          isRoleFocused ? "text-light-primary" : ""
+                        }`
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "absolute right-2 text-sm",
+                        nameState === inputState.INIT &&
+                          " text-variant-on-surface",
+                        nameState === inputState.VALID &&
+                          `text-green-500 ${
+                            isRoleFocused ? "" : "text-green-400"
+                          }`,
+                        nameState === inputState.INVALID_QUANTITY &&
+                          "text-error",
+                        nameState === inputState.INVALID_DOUBLE && "text-error",
+                        nameState === inputState.INVALID_DOUBLE && "text-error",
+                        nameState === inputState.INVALID_SYMBOL && "text-error",
+                        nameState === inputState.EMPTY &&
+                          `text-error ${
+                            isRoleFocused ? "text-light-primary" : ""
+                          }`
+                      )}
+                    >
+                      {editedRole.length}/20
+                    </span>
+                    {(() => {
+                      if (nameState === inputState.INVALID_SYMBOL) {
+                        return "Role can't contain symbols (!@#$%^&*,./)!";
+                      } else if (nameState === inputState.INVALID_QUANTITY) {
+                        return "Role must be between 3 and 32 characters!";
+                      } else if (nameState === inputState.INVALID_DOUBLE) {
+                        return "Role name already exist!";
+                      } else if (nameState === inputState.INVALID_STEP) {
+                        return "Role name is required!";
+                      } else if (nameState === inputState.EMPTY) {
+                        return "Role cannot be empty.";
+                      } else if (nameState === inputState.VALID) {
+                        return "Role can be used.";
+                      } else {
+                        return "";
+                      }
+                    })()}
+                  </label>
+                  <label
+                    htmlFor="name"
+                    className={cn(
+                      "absolute top-0 left-2 translate-y-5 transition-all duration-300 px-2",
+                      editedRole.length === 0 &&
+                        "top-3 text-variant-on-surface",
+                      editedRole.length > 0 &&
+                        "-top-2 text-variant-on-surface -translate-y-4 bg-high-container text-sm",
+                      nameState === inputState.VALID &&
+                        `text-green-500 ${
+                          isRoleFocused ? "" : "border-green-400"
+                        }`,
+                      nameState === inputState.INVALID_QUANTITY &&
+                        "text-error text-sm",
+                      nameState === inputState.INVALID_DOUBLE &&
+                        "text-error text-sm ",
+                      nameState === inputState.INVALID_SYMBOL &&
+                        "text-error text-sm",
+                      nameState === inputState.EMPTY &&
+                        `text-error ${
+                          isRoleFocused ? "text-light-primary" : ""
+                        }`
+                    )}
+                  >
+                    Role Name
+                  </label>
+                </div>
                 {/* Worksets Checkbox */}
                 <EditWorksetsDropdown
                   roleList={worksetsList}
@@ -205,7 +383,7 @@ const EditRole = ({ handleClose, details, worksetsList, servicesList }) => {
                 />
                 {/* Worksets Tags Group */}
                 <div className="pt-3 flex flex-nowrap overflow-x-auto">
-                  <div className="flex flex-row gap-5 pb-2">
+                  <div className="flex flex-row gap-5">
                     {Array.isArray(selectedTagsWorkset) &&
                     selectedTagsWorkset.length !== 0 ? (
                       selectedTagsWorkset.map((worksets) => (
@@ -233,7 +411,7 @@ const EditRole = ({ handleClose, details, worksetsList, servicesList }) => {
                 />
                 {/* Services Tags Group */}
                 <div className="pt-3 flex flex-nowrap overflow-x-auto">
-                  <div className="flex flex-row gap-5 pb-2">
+                  <div className="flex flex-row gap-5">
                     {Array.isArray(selectedTagsService) &&
                     selectedTagsService.length !== 0 ? (
                       selectedTagsService.map((services) => (

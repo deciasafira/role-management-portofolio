@@ -11,7 +11,7 @@ export function ConfirmationDialog({ setShow, onSubmit }) {
 			className={cn(
 				'w-full max-w-md mx-auto rounded-2xl drop-shadow-lg p-10 bg-high-container'
 			)}>
-			<Dialog.Title className={cn('text-xl text-center font-bold mb-2 text-red-500')}>Save Role</Dialog.Title>
+			<Dialog.Title className={cn('text-xl text-center font-bold mb-2 text-error')}>Save Role</Dialog.Title>
 			<Dialog.Description
 				className={cn('text-center font-semibold mb-4 text-white')}>
 				Data from this Role will be saved.
@@ -21,13 +21,13 @@ export function ConfirmationDialog({ setShow, onSubmit }) {
 				<Button
 					clickHandler={() => setShow(false)}
 					type='reset'
-					className='py-2 font-semibold text-white bg-gray-500 rounded-md drop-shadow-lg min-w-[9rem]'>
+					className='py-2 font-semibold bg-dark-secondary hover:bg-secondary-hover rounded-md drop-shadow-lg min-w-[9rem]'>
 					Cancel
 				</Button>
 				<Button
 					clickHandler={() => onSubmit()}
 					type='button'
-					className='py-2 font-semibold text-white bg-main rounded-md drop-shadow-lg min-w-[9rem]'>
+					className='py-2 font-semibold bg-primary hover:bg-light-primary rounded-md drop-shadow-lg min-w-[9rem]'>
 					Save
 				</Button>
 			</div>

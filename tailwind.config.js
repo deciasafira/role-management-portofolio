@@ -17,7 +17,7 @@ module.exports = {
         'container': '#1E1E2C',
         'high-container': '#313242',
         'primary-container': '#2A2A4D',
-        'low-container': '#8F8FA1',
+        'low-container': '#F5F5F580',
         'success': '#44C4A1',
         'on-error': '#8C1010',
         'variant-on-surface': '#F0F0F0',

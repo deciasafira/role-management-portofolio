@@ -217,7 +217,7 @@ export const deleteRole = (id, darkMode, navigate) => {
 							backdrop: darkMode ? `rgba(49, 50, 66, 0.4)` : `rgba(255, 255, 255, 0.4)`,
 							background: darkMode ? `#313242` : `#FFFFFF`,
 							confirmButtonColor: '#FFFFFF',
-							confirmButtonText: "<p class='text-red-500 font-semibold'>Close</p>",
+							confirmButtonText: "<p class='text-error font-semibold'>Close</p>",
 							customClass: {
 								icon: 'border-none custom-swal-icon',
 								confirmButton: 'swal-conf-fail bg-transparent',

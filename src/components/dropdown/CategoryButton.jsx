@@ -7,9 +7,10 @@ import { FaFilter } from "react-icons/fa";
 const CategoryButton = ({
   selectedCategory,
   setSelectedCategory,
+  isCategoryClicked,
+  setIsCategoryClicked
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isCategoryClicked, setIsCategoryClicked] = useState(false);
   const modalRef = useRef(null);
   const buttonRef = useRef(null);
 

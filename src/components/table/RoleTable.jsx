@@ -43,6 +43,8 @@ const RoleTable = ({
   isTableEmpty,
   setDisplayedRoles,
   setRolesCountInPage,
+  isAllUserChecked,
+  setIsAllUserChecked
 }) => {
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
@@ -52,7 +54,6 @@ const RoleTable = ({
   const [selectedData, setSelectedData] = useState({});
 
   // Delete CheckBox
-  const [isAllUserChecked, setIsAllUserChecked] = useState(false);
   const [isAllUserCheckboxClicked, setIsAllUserCheckboxClicked] =
     useState(false);
 
@@ -182,14 +183,13 @@ const RoleTable = ({
   const startIndex = (activePage - 1) * selectedItemsPerPage + 1;
 
   useEffect(() => {
-    if (RoleContainer && displayedRoles && !isAllUserChecked) {
+    if (RoleContainer && displayedRoles) {
       const updatedRoleContainer = RoleContainer.filter(roleId =>
         displayedRoles.some(role => role.id === roleId)
       );
       setRoleContainer(updatedRoleContainer);
     }
   }, [searchTerm, selectedItemsPerPage, activePage]);
-
   return (
     <div>
       <div
@@ -199,7 +199,7 @@ const RoleTable = ({
         <table className="min-w-full table-fixed">
           <thead className="bg-primary sticky top-0 z-10">
             <tr>
-              <th className="flex px-2 flex-row justify-center py-2 text-center items-center text-white border-white">
+              <th className="flex px-3 flex-row justify-center py-2 text-center items-center text-white border-white">
                 <EditCheckboxAll
                   isAllChecked={isAllUserChecked}
                   setIsAllChecked={setIsAllUserChecked}
@@ -331,7 +331,7 @@ const RoleTable = ({
                   {/* Delete Icon */}
                   <button
                     title="Delete"
-                    className="text-red-500 hover:text-red-700"
+                    className="text-error hover:text-red-700"
                     onClick={() => handleShowPopup("delete", role)}
                   >
                     <MdOutlineDeleteForever className="w-6 h-6" />
@@ -358,11 +358,7 @@ const RoleTable = ({
         {displayedRoles.length > 0 && (
           <Button
             label="Delete All"
-            clickHandler={() =>
-              handleShowPopup(
-                "delete",
-                allRoles.map((role) => role.id)
-              )
+            clickHandler={() => handleShowPopup("delete", allRoles.map((role) => role.id))
             }
             className="bg-dark-error hover:bg-error-hover shadow-2xl"
           />
@@ -376,6 +372,7 @@ const RoleTable = ({
           details={selectedData}
           handleClose={handleClosePopup}
           setRoleContainer={setRoleContainer}
+          isAll={selectedData.length > displayedRoles.length}
         />
       )}
       {showPopupType === "edit" && (

@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Button from "../../Button/Button";
 import Modal from "../../modals/Modal";
 
-const DeleteRole = ({ handleClose, setRoleContainer, details }) => {
+const DeleteRole = ({ handleClose, setRoleContainer, details, isAll }) => {
   const dispatch = useDispatch();
   const errorMessage = useSelector((state) => state.globalState.errorMessage);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState("");
@@ -95,9 +95,9 @@ const DeleteRole = ({ handleClose, setRoleContainer, details }) => {
                 clickHandler={(e) => {
                   e.preventDefault();
                   if (Array.isArray(details)) {
-                    dispatch(asyncDeleteRoles(details));
+                    dispatch(asyncDeleteRoles(details, isAll));
                   } else {
-                    dispatch(asyncDeleteRoles(details.id));
+                    dispatch(asyncDeleteRoles(details.id, isAll));
                   }
                   setRoleContainer([]);
                   handleClose();

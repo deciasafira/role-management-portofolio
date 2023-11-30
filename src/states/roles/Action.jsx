@@ -57,17 +57,20 @@ function asyncReceiverRoles(page, limit) {
   };
 }
 
-function asyncDeleteRoles(roleId) {
+function asyncDeleteRoles(roleId, isAll) {
   return async (dispatch) => {
     try {
       const responseDelete = await FetchRoles.deleteDataRoles(roleId);
       if (responseDelete.message === "role deleted successfully." || responseDelete.message === "role deleted successfully") {
-        console.log("updatedRole.message", responseDelete.message)
-        dispatch(setIsActionSuccess("delete role success"))
+        if (isAll) {
+          dispatch(setIsActionSuccess("delete all role success"))
+        }
+        else {
+          dispatch(setIsActionSuccess("delete role success"))
+        }
         dispatch(deleteRolesActionCreator(roleId));
       }
       else {
-        console.log("error delete", responseDelete.error)
         dispatch(setIsActionSuccess("failed"))
         dispatch(setErrorMessage(responseDelete.error))
       }

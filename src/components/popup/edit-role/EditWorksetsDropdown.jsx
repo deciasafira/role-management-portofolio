@@ -65,9 +65,8 @@ const EditWorksetsDropdown = ({
         <input
           type="yahoo"
           ref={buttonRef}
-          className={`w-${DropdownWidth} text-lg font-normal pl-4 h-12 bg-transparent border border-white ${
-            showDropdown ? "rounded-t-lg border-light-primary" : "rounded-lg"
-          }`}
+          className={`w-${DropdownWidth} text-lg font-normal pl-4 h-12 bg-transparent border border-white ${showDropdown ? "rounded-t-lg border-light-primary" : "rounded-lg"
+            }`}
           value={text}
           placeholder={showDropdown && "Search Workset"}
           onChange={handleInputChange}
@@ -78,9 +77,9 @@ const EditWorksetsDropdown = ({
           className={cn(
             "ml-0.5 absolute left-3 transition-all duration-200 px-1 bg-high-container",
             text.length === 0 &&
-              `top-3 ${showDropdown ? " -top-2 left-2.5 text-sm" : ""}`,
+            `top-3 ${showDropdown ? " -top-2 left-2.5 text-sm" : ""}`,
             text.length > 0 &&
-              `-top-2 left-2.5 text-sm ${showDropdown && "text-light-primary"}`
+            `-top-2 left-2.5 text-sm ${showDropdown && "text-light-primary"}`
           )}
         >
           {showDropdown
@@ -109,7 +108,7 @@ const EditWorksetsDropdown = ({
           ref={modalRef}
           className="flex flex-col rounded-b-lg divide-none bg-container shadow-md max-h-40 overflow-y-auto"
         >
-          {Array.isArray(filteredRoleList) && filteredRoleList.length !== 0 && (
+          {Array.isArray(filteredRoleList) && filteredRoleList.length !== 0 && text.length === 0 && (
             <CheckBoxAllWorksets
               isAllWorksetsChecked={isAllWorksetsChecked}
               setIsAllWorksetsChecked={setIsAllWorksetsChecked}

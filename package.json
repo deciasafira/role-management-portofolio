@@ -1,39 +1,62 @@
 {
-  "name": "fe-role-management",
+  "name": "fe-user-list",
   "version": "1.0.0",
+  "proxy": "http://localhost:8999",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
-    "build:start": "cd dist && PORT=8088 npx serve",
+    "build:start": "cd dist && PORT=8082 npx serve",
     "start": "webpack serve --open --mode development",
-    "start:live": "webpack serve --open --mode development --live-reload --hot"
+    "start:live": "webpack serve --open --mode development --live-reload --hot",
+    "test": "jest --config jest.config.js",
+    "test:watch": "jest --watch --config jest.config.js"
   },
   "license": "MIT",
   "author": {
     "name": "Jack Herrington",
     "email": "jherr@pobox.com"
   },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "lines": 80
+      }
+    }
+  },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
+    "@babel/core": "^7.23.3",
     "@babel/plugin-transform-runtime": "^7.15.8",
-    "@babel/preset-env": "^7.15.8",
-    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@material-tailwind/react": "^2.1.1",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.1.0",
     "autoprefixer": "^10.1.0",
-    "babel-loader": "^8.2.2",
+    "babel-jest": "^29.7.0",
+    "babel-loader": "^8.3.0",
     "css-loader": "^6.3.0",
+    "dotenv": "^16.3.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.2.1",
     "postcss-loader": "^4.1.0",
+    "react-error-overlay": "^6.0.9",
+    "react-scripts": "^5.0.1",
+    "redux-mock-store": "^1.5.4",
     "style-loader": "^3.3.0",
     "svg-loader": "^0.0.2",
     "tailwindcss": "^2.0.2",
-    "webpack": "^5.57.1",
+    "webpack": "^5.88.2",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.3.1"
   },
   "dependencies": {
     "@babel/runtime": "^7.13.10",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@flaticon/flaticon-uicons": "^2.4.0",
     "@fortawesome/fontawesome-free": "^6.4.2",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
@@ -41,19 +64,31 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.1",
+    "@mui/material": "^5.14.10",
     "@reduxjs/toolkit": "^1.9.5",
-    "@remix-run/react": "^2.0.1",
-    "axios": "^1.5.1",
-    "clsx": "^2.0.0",
+    "@svgr/webpack": "^8.1.0",
+    "axios": "^1.6.2",
     "dotenv": "^16.3.1",
+    "env-cmd": "^10.1.0",
+    "loader": "^2.1.1",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.6",
     "react-icons": "^4.11.0",
+    "react-modal": "^3.16.1",
     "react-redux": "^8.1.2",
     "react-router-dom": "^6.16.0",
+    "react-select": "^5.7.4",
+    "react-test-renderer": "^18.2.0",
     "react-toastify": "^9.1.3",
-    "sweetalert2": "^11.7.31",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2",
+    "svg-loader": "^0.0.2",
+    "sweetalert2": "^11.10.0",
     "tailwind-merge": "^1.14.0",
-    "tw-elements": "^1.0.0"
+    "tw-elements": "^1.0.0",
+    "tw-elements-react": "^1.0.0-alpha1",
+    "url-loader": "^4.1.1"
   }
 }

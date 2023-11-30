@@ -38,6 +38,7 @@ const RoleManagement = ({ showMap, setShowMap }) => {
 
   //Category Button
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [isCategoryClicked, setIsCategoryClicked] = useState(false);
 
   //Search Button
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,6 +48,7 @@ const RoleManagement = ({ showMap, setShowMap }) => {
 
   // Loading State used for rendering user table upon changing pages
   const [isLoading, setIsLoading] = useState(true);
+  const pageNumbers = [];
 
   // Init add role forms
   const [name, setName] = useState(name || "");
@@ -68,6 +70,7 @@ const RoleManagement = ({ showMap, setShowMap }) => {
   const [isTableEmpty, setIsTableEmpty] = useState(false);
   const [displayedRoles, setDisplayedRoles] = useState();
   const [RolesCountInPage, setRolesCountInPage] = useState();
+  const [isAllUserChecked, setIsAllUserChecked] = useState(false);
 
   const [activeTab, setActiveTab] = useState("Role List");
   const tabs = [{ value: "Role List" }, { value: "Add Role" }];
@@ -116,14 +119,26 @@ const RoleManagement = ({ showMap, setShowMap }) => {
     dispatch(asyncReceiverWorksets());
     if (isActionSuccess === 'delete role success') {
       showSuccessToast('Delete success')
-      if (RolesCountInPage === 1) {
+      if (isAllUserChecked) {
         if (activePage > 1) {
+          setIsAllUserChecked(false)
           setIsLoading(true);
           setActivePage(activePage - 1)
         } else {
-          setIsTableEmpty(true)
+          setIsAllUserChecked(false)
+          setIsLoading(true);
+          setActivePage(1)
         }
       }
+      else if (RolesCountInPage === 1 && activePage > 1) {
+        setIsLoading(true);
+        setActivePage(activePage - 1)
+      }
+    }
+    else if (isActionSuccess === 'delete all role success') {
+      showSuccessToast('Delete all roles success')
+      setIsLoading(true);
+      setActivePage(1)
     }
     else if (isActionSuccess === "go to role list" && isLoading === false) {
       navigateToRoleList();
@@ -151,6 +166,8 @@ const RoleManagement = ({ showMap, setShowMap }) => {
         <CategoryButton
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
+          isCategoryClicked={isCategoryClicked}
+          setIsCategoryClicked={setIsCategoryClicked}
         />
         <SearchButton searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <RowsPerPage
@@ -176,6 +193,8 @@ const RoleManagement = ({ showMap, setShowMap }) => {
             isTableEmpty={isTableEmpty}
             setDisplayedRoles={setDisplayedRoles}
             setRolesCountInPage={setRolesCountInPage}
+            isAllUserChecked={isAllUserChecked}
+            setIsAllUserChecked={setIsAllUserChecked}
           />
         )}
       </div>
@@ -187,6 +206,7 @@ const RoleManagement = ({ showMap, setShowMap }) => {
             setActivePage={setActivePage}
             setIsLoading={setIsLoading}
             displayedRoles={displayedRoles}
+            pageNumbers={pageNumbers}
           />
         )}
       </div>

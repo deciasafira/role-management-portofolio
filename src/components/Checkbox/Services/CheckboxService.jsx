@@ -41,20 +41,17 @@ const CheckBoxServices = ({
         setTagsContainer(
           TagsContainer.filter((item) => item.name !== role.name)
         );
-        console.log("abis di filter jadi", TagsContainer);
       }
-    } else if (
-      !isCheckedState &&
-      !TagsContainer.map((role) => role.name).includes(role.name)
-    ) {
+    } else if (!isCheckedState && !TagsContainer.map((role) => role.name).includes(role.name)) {
       setTagsContainer([...TagsContainer, role]);
-      console.log("abis di tambah jadi", TagsContainer);
+      if (allRole.length === TagsContainer.length + 1) {
+        setIsAllServicesChecked(true);
+      }
     }
   };
 
   return (
     <label className="pl-5 flex relative items-center px-3 py-2 cursor-pointer hover:bg-low-container">
-
       <input
         id="default-checkbox"
         type="checkbox"

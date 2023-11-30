@@ -15,8 +15,6 @@ const CheckBoxWorksets = ({
   setIsAllClicked,
   TagsContainer,
   setTagsContainer,
-  // setdelete_this,
-  // setcreate_this,
 }) => {
   const [isCheckedState, setIsCheckedState] = useState(isChecked);
 
@@ -44,14 +42,12 @@ const CheckBoxWorksets = ({
         setTagsContainer(
           TagsContainer.filter((item) => item.name !== role.name)
         );
-        // console.log("abis di filter jadi", TagsContainer);
       }
-    } else if (
-      !isCheckedState &&
-      !TagsContainer.map((role) => role.name).includes(role.name)
-    ) {
+    } else if (!isCheckedState && !TagsContainer.map((role) => role.name).includes(role.name)) {
       setTagsContainer([...TagsContainer, role]);
-      // console.log("abis di tambah jadi", TagsContainer);
+      if (allRole.length === TagsContainer.length + 1) {
+        setIsAllWorksetsChecked(true);
+      }
     }
   };
 

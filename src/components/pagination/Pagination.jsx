@@ -5,9 +5,9 @@ const Pagination = ({
   activePage,
   setActivePage,
   setIsLoading,
-  displayedRoles
+  displayedRoles,
+  pageNumbers
 }) => {
-  const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(displayedRoles / rolesPerPage); i++) {
     pageNumbers.push(i);
